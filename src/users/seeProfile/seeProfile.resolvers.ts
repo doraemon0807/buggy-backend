@@ -1,9 +1,10 @@
 import { Resolvers } from "../../types";
 import client from "../../client";
+import { User } from "@prisma/client";
 
 export const resolver: Resolvers = {
   Query: {
-    seeProfile: async (_, { username }) => {
+    seeProfile: async (_, { username }: User) => {
       const foundUser = await client.user.findUnique({
         where: {
           username,

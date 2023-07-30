@@ -1,10 +1,11 @@
 import * as bcrypt from "bcrypt";
 import { Resolvers } from "../../types";
 import client from "../../client";
+import { User } from "@prisma/client";
 
 export const resolver: Resolvers = {
   Query: {
-    seeProfile: async (_, { username }) => {
+    seeProfile: async (_, { username }: User) => {
       const foundUser = await client.user.findUnique({
         where: {
           username,
@@ -19,7 +20,7 @@ export const resolver: Resolvers = {
   Mutation: {
     createAccount: async (
       _,
-      { firstName, lastName, username, email, password }
+      { firstName, lastName, username, email, password }: User
     ) => {
       // check if username or email are already on DB
       const existingUser = await client.user.findFirst({
