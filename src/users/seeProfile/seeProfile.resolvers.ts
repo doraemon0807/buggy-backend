@@ -1,10 +1,10 @@
 import { Resolvers } from "../../types";
-import client from "../../client";
 import { User } from "@prisma/client";
+import { protectedResolver } from "../users.utils";
 
 export const resolver: Resolvers = {
   Query: {
-    seeProfile: async (_, { username }: User) => {
+    seeProfile: protectedResolver(async (_, { username }: User, { client }) => {
       const foundUser = await client.user.findUnique({
         where: {
           username,
@@ -14,7 +14,7 @@ export const resolver: Resolvers = {
         throw new Error("The user doesn't exist.");
       }
       return foundUser;
-    },
+    }),
   },
 };
 

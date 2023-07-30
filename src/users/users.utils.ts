@@ -1,6 +1,8 @@
 import * as jwt from "jsonwebtoken";
 import client from "../client";
+import { Resolver } from "../types";
 
+// Get current user info from token
 export const getUser = async (token: string) => {
   try {
     if (!token) {
@@ -26,3 +28,28 @@ export const getUser = async (token: string) => {
     return null;
   }
 };
+
+// Protector middleware to check if user is looged in
+// export const protectedResolver =
+//   (ourResolver: Resolver): Resolver =>
+//   (root, args, context, info) => {
+//     if (!context.loggedInUser) {
+//       return {
+//         ok: false,
+//         error: "Please log in to perform this action.",
+//       };
+//     }
+//     return ourResolver(root, args, context, info);
+//   };
+
+export function protectedResolver(ourResolver: Resolver): Resolver {
+  return function (root, args, context, info) {
+    if (!context.loggedInUser) {
+      return {
+        ok: false,
+        error: "Please log in to perform this action.",
+      };
+    }
+    return ourResolver(root, args, context, info);
+  };
+}
