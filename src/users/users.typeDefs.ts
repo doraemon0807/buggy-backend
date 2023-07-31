@@ -1,6 +1,4 @@
-import { gql } from "apollo-server";
-
-export default gql`
+const usersTypeDefs = `#graphql
   type User {
     id: String!
     createdAt: String!
@@ -9,5 +7,9 @@ export default gql`
     lastName: String!
     username: String!
     email: String!
+    bio: String
+    avatar: String
   }
 `;
+
+export default usersTypeDefs;

@@ -1,6 +1,4 @@
-import { gql } from "apollo-server";
-
-export default gql`
+const loginTypeDefs = `#graphql
   type LoginResult {
     ok: Boolean!
     token: String
@@ -11,3 +9,5 @@ export default gql`
     login(username: String!, password: String!): LoginResult!
   }
 `;
+
+export default loginTypeDefs;

@@ -1,6 +1,4 @@
-import { gql } from "apollo-server";
-
-export default gql`
+const createAccountTypeDefs = `#graphql
   type CreateAccountResult {
     ok: Boolean!
     error: String
@@ -16,3 +14,5 @@ export default gql`
     ): User
   }
 `;
+
+export default createAccountTypeDefs;

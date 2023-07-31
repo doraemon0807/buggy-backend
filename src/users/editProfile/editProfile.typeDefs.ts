@@ -1,6 +1,4 @@
-import { gql } from "apollo-server";
-
-export default gql`
+const editProfileTypeDefs = `#graphql
   type EditProfileResult {
     ok: Boolean!
     error: String
@@ -13,6 +11,9 @@ export default gql`
       username: String
       email: String
       password: String
+      bio: String
     ): EditProfileResult!
   }
 `;
+
+export default editProfileTypeDefs;

@@ -1,7 +1,7 @@
 import { User } from "@prisma/client";
 
 import { Resolvers } from "../../types";
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 
 export const resolver: Resolvers = {
@@ -9,7 +9,14 @@ export const resolver: Resolvers = {
     editProfile: protectedResolver(
       async (
         _,
-        { firstName, lastName, username, email, password: newPassword }: User,
+        {
+          firstName,
+          lastName,
+          username,
+          email,
+          password: newPassword,
+          bio,
+        }: User,
         { loggedInUser, client }
       ) => {
         let hashPassword = null;
@@ -26,6 +33,7 @@ export const resolver: Resolvers = {
             lastName,
             username,
             email,
+            bio,
             ...(hashPassword && { password: hashPassword }),
           },
         });

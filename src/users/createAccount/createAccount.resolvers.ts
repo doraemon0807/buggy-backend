@@ -1,4 +1,4 @@
-import * as bcrypt from "bcrypt";
+import bcrypt from "bcrypt";
 import { Resolvers } from "../../types";
 import { User } from "@prisma/client";
 
