@@ -1,4 +1,6 @@
 const editProfileTypeDefs = `#graphql
+  scalar Upload
+  
   type EditProfileResult {
     ok: Boolean!
     error: String
@@ -12,6 +14,7 @@ const editProfileTypeDefs = `#graphql
       email: String
       password: String
       bio: String
+      avatar: Upload
     ): EditProfileResult!
   }
 `;

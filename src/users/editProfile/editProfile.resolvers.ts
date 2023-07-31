@@ -1,8 +1,8 @@
 import { User } from "@prisma/client";
-
 import { Resolvers } from "../../types";
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
+import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 
 export const resolver: Resolvers = {
   Mutation: {
@@ -16,9 +16,11 @@ export const resolver: Resolvers = {
           email,
           password: newPassword,
           bio,
+          avatar,
         }: User,
         { loggedInUser, client }
       ) => {
+        console.log(avatar);
         let hashPassword = null;
         if (newPassword) {
           hashPassword = await bcrypt.hash(newPassword, 10);
