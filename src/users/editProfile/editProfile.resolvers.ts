@@ -3,8 +3,10 @@ import { Resolvers } from "../../types";
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
+import { createWriteStream } from "fs";
 
-export const resolver: Resolvers = {
+export const resolver = {
+  Upload: GraphQLUpload,
   Mutation: {
     editProfile: protectedResolver(
       async (
@@ -17,10 +19,16 @@ export const resolver: Resolvers = {
           password: newPassword,
           bio,
           avatar,
-        }: User,
+        },
         { loggedInUser, client }
       ) => {
-        console.log(avatar);
+        const { filename, createReadStream } = await avatar;
+        const readStream = createReadStream();
+        const writeStream = createWriteStream(
+          process.cwd() + "/uploads/" + filename
+        );
+        readStream.pipe(writeStream);
+
         let hashPassword = null;
         if (newPassword) {
           hashPassword = await bcrypt.hash(newPassword, 10);
@@ -36,6 +44,7 @@ export const resolver: Resolvers = {
             username,
             email,
             bio,
+
             ...(hashPassword && { password: hashPassword }),
           },
         });
