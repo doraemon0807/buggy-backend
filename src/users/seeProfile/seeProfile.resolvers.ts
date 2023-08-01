@@ -2,7 +2,7 @@ import { Resolvers } from "../../types";
 import { User } from "@prisma/client";
 import { protectedResolver } from "../users.utils";
 
-export const resolver: Resolvers = {
+const seeProfileResolver: Resolvers = {
   Query: {
     seeProfile: protectedResolver(async (_, { username }: User, { client }) => {
       const foundUser = await client.user.findUnique({
@@ -11,11 +11,17 @@ export const resolver: Resolvers = {
         },
       });
       if (!foundUser) {
-        throw new Error("The user doesn't exist.");
+        return {
+          ok: false,
+          error: "User not found.",
+        };
       }
-      return foundUser;
+      return {
+        ok: true,
+        profile: foundUser,
+      };
     }),
   },
 };
 
-export default resolver;
+export default seeProfileResolver;

@@ -2,9 +2,13 @@ import bcrypt from "bcrypt";
 import { Resolvers } from "../../types";
 import { User } from "@prisma/client";
 
-export const resolver: Resolvers = {
+interface CreateAccountProps {
+  username: string;
+}
+
+const createAccountresolver: Resolvers = {
   Query: {
-    seeProfile: async (_, { username }: User, { client }) => {
+    seeProfile: async (_, { username }: CreateAccountProps, { client }) => {
       const foundUser = await client.user.findUnique({
         where: {
           username,
@@ -13,7 +17,9 @@ export const resolver: Resolvers = {
       if (!foundUser) {
         throw new Error("The user doesn't exist.");
       }
-      return foundUser;
+      return {
+        ok: true,
+      };
     },
   },
   Mutation: {
@@ -36,14 +42,17 @@ export const resolver: Resolvers = {
         },
       });
       if (existingUser) {
-        throw new Error("This username/email is already taken.");
+        return {
+          ok: false,
+          error: "This username/email is already taken.",
+        };
       }
 
       // hash password
       const hashPassword = await bcrypt.hash(password, 10);
 
       // save and return the user
-      return await client.user.create({
+      await client.user.create({
         data: {
           firstName,
           lastName,
@@ -52,8 +61,11 @@ export const resolver: Resolvers = {
           password: hashPassword,
         },
       });
+      return {
+        ok: true,
+      };
     },
   },
 };
 
-export default resolver;
+export default createAccountresolver;

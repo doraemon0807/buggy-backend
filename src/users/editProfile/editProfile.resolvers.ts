@@ -1,11 +1,19 @@
-import { User } from "@prisma/client";
-import { Resolvers } from "../../types";
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import { createWriteStream } from "fs";
 
-export const resolver = {
+interface EditProfileProps {
+  firstName: string;
+  lastName: string;
+  username: string;
+  email: string;
+  password: string;
+  bio: string;
+  avatar: any;
+}
+
+const editProfileResolver = {
   Upload: GraphQLUpload,
   Mutation: {
     editProfile: protectedResolver(
@@ -19,15 +27,20 @@ export const resolver = {
           password: newPassword,
           bio,
           avatar,
-        },
+        }: EditProfileProps,
         { loggedInUser, client }
       ) => {
-        const { filename, createReadStream } = await avatar;
-        const readStream = createReadStream();
-        const writeStream = createWriteStream(
-          process.cwd() + "/uploads/" + filename
-        );
-        readStream.pipe(writeStream);
+        let avatarUrl = null;
+        if (avatar) {
+          const { filename, createReadStream } = await avatar;
+          const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
+          const readStream = createReadStream();
+          const writeStream = createWriteStream(
+            process.cwd() + "/uploads/" + newFilename
+          );
+          readStream.pipe(writeStream);
+          avatarUrl = `http://localhost:4000/static/${newFilename}`;
+        }
 
         let hashPassword = null;
         if (newPassword) {
@@ -44,7 +57,7 @@ export const resolver = {
             username,
             email,
             bio,
-
+            ...(avatarUrl && { avatar: avatarUrl }),
             ...(hashPassword && { password: hashPassword }),
           },
         });
@@ -64,4 +77,4 @@ export const resolver = {
   },
 };
 
-export default resolver;
+export default editProfileResolver;

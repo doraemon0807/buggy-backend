@@ -9,6 +9,8 @@ const usersTypeDefs = `#graphql
     email: String!
     bio: String
     avatar: String
+    following: [User]
+    followers: [User]
   }
 `;
 

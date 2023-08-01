@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["views"]
 }
 
 datasource db {
@@ -21,4 +22,7 @@ model User {
   password  String
   bio       String?
   avatar    String?
+
+  followers User[] @relation("Follows")
+  following User[] @relation("Follows")
 }

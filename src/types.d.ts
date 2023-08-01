@@ -1,15 +1,14 @@
 import { PrismaClient, User } from "@prisma/client";
-import { GraphQLScalarType } from "graphql";
 
-type Context = {
+type ContextType = {
   loggedInUser?: User;
-  client: PrismaClient;
+  client?: PrismaClient;
 };
 
 export type Resolver = (
   root: any,
   args: any,
-  context: Context,
+  context: ContextType,
   info: any
 ) => any;
 

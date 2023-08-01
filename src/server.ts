@@ -16,21 +16,23 @@ const PORT = process.env.PORT || 4000;
 const app = express();
 const httpServer = http.createServer(app);
 
-const server = new ApolloServer({
+const apollo = new ApolloServer({
   typeDefs,
   resolvers,
   plugins: [ApolloServerPluginDrainHttpServer({ httpServer })],
   csrfPrevention: false,
 });
 
-await server.start();
+await apollo.start();
+
+app.use("/static", express.static("uploads"));
 
 app.use(
   logger("tiny"),
   cors<cors.CorsRequest>(),
   pkg.json(),
   graphqlUploadExpress(),
-  expressMiddleware(server, {
+  expressMiddleware(apollo, {
     context: async ({ req }) => {
       return {
         loggedInUser: await getUser(req.headers.token as string),
