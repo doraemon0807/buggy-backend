@@ -14,7 +14,8 @@ const photosTypeDefs = `#graphql
         createdAt: String!
         updatedAt: String!
         hashtag: String!
-        photo: [Photo]
+        photos(page: Int!): [Photo]
+        totalPhotos: Int!
     }
 
 `;

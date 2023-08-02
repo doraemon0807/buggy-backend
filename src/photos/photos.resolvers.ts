@@ -23,6 +23,31 @@ const photosResolver: Resolvers = {
       return hashtags;
     },
   },
+  Hashtag: {
+    photos: async ({ id }, { page }, { client }) => {
+      const photos = await client.hashtag
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .photos();
+      return photos;
+    },
+    totalPhotos: async ({ id }, _, { client }) => {
+      const totalPhotos = await client.photo.count({
+        where: {
+          hashtags: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+
+      return totalPhotos;
+    },
+  },
 };
 
 export default photosResolver;
