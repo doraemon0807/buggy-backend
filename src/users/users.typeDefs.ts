@@ -15,6 +15,7 @@ const usersTypeDefs = `#graphql
     totalFollowers: Int!
     isFollowing: Boolean!
     isMe: Boolean!
+    photos: [Photo]
   }
 `;
 
