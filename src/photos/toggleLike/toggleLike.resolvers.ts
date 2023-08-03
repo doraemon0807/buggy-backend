@@ -2,7 +2,7 @@ import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
 interface ToggleLikeProps {
-  id: number;
+  id: number; // photo Id
 }
 
 const likePhotoResolver: Resolvers = {

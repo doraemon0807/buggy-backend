@@ -1,11 +1,11 @@
 const toggleLikeTypeDefs = `#graphql
-    type toggleLikeResult{
+    type ToggleLikeResult{
         ok: Boolean!
         error: String
     }
 
     type Mutation{
-        toggleLike(id:Int!):toggleLikeResult!
+        toggleLike(id:Int!):ToggleLikeResult!
     }
 
 `;
