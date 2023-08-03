@@ -25,6 +25,7 @@ model User {
   followers User[]   @relation("Follows")
   following User[]   @relation("Follows")
   photos    Photo[]
+  likes     Like[]
 }
 
 model Photo {
@@ -37,6 +38,7 @@ model Photo {
   caption   String
   hashtags  Hashtag[]
   hashtagId Int?
+  likes     Like[]
 }
 
 model Hashtag {
@@ -45,4 +47,17 @@ model Hashtag {
   updatedAt DateTime @updatedAt
   hashtag   String   @unique
   photos    Photo[]
+}
+
+model Like {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  photo     Photo    @relation(fields: [photoId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  photoId   Int
+  userId    Int
+
+  // user cannot like a picture multiple times
+  @@unique([photoId, userId])
 }

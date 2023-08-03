@@ -11,7 +11,7 @@ const createAccountTypeDefs = `#graphql
       username: String!
       email: String!
       password: String!
-    ): User
+    ): CreateAccountResult!
   }
 `;
 

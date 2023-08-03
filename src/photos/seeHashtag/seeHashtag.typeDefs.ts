@@ -7,7 +7,7 @@ const seeHashtagTypeDefs = `#graphql
     }
     
     type Query{
-        seeHashtag(hashtag: String!): SeeHashtagResult
+        seeHashtag(hashtag: String!): SeeHashtagResult!
     }
 `;
 

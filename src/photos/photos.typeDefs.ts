@@ -7,6 +7,7 @@ const photosTypeDefs = `#graphql
         file: String!
         caption: String
         hashtags: [Hashtag]
+        likes: Int!
     }
 
     type Hashtag {
@@ -16,6 +17,13 @@ const photosTypeDefs = `#graphql
         hashtag: String!
         photos(page: Int!): [Photo]
         totalPhotos: Int!
+    }
+
+    type Like {
+        id: Int!
+        createdAt: String!
+        updatedAt: String!
+        photo: Photo!
     }
 
 `;

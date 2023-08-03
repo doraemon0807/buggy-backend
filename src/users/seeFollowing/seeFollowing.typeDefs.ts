@@ -8,7 +8,7 @@ const seeFollowingTypeDefs = `#graphql
     }
 
     type Query {
-        seeFollowing(username: String!, lastId: Int): SeeFollowingResult
+        seeFollowing(username: String!, lastId: Int): SeeFollowingResult!
     }
 `;
 

@@ -22,6 +22,14 @@ const photosResolver: Resolvers = {
       });
       return hashtags;
     },
+    likes: async ({ id }, _, { client }) => {
+      const likes = await client.like.count({
+        where: {
+          photoId: id,
+        },
+      });
+      return likes;
+    },
   },
   Hashtag: {
     photos: async ({ id }, { page }, { client }) => {

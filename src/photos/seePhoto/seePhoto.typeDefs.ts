@@ -5,7 +5,7 @@ const seePhotoTypeDefs = `#graphql
         photo: Photo
     }
     type Query{
-        seePhoto(id:Int!): SeePhotoResult
+        seePhoto(id:Int!): SeePhotoResult!
     }
 `;
 

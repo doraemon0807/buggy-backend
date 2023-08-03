@@ -56,7 +56,7 @@ const usersResolver: Resolvers = {
       return Boolean(isFollowing);
     },
     photos: async ({ id }: UsersResolverProps, _, { client }) => {
-      const photos = client.user
+      const photos = await client.user
         .findUnique({
           where: {
             id,

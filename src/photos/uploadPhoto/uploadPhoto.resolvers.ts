@@ -1,5 +1,6 @@
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import { protectedResolver } from "../../users/users.utils";
+import { processHashtags } from "../photos.utils";
 
 interface UploadPhotoProps {
   file: string;
@@ -10,19 +11,15 @@ const uploadPhotoResolver = {
   Upload: GraphQLUpload,
   Mutation: {
     uploadPhoto: protectedResolver(
-      async (_, { file, caption }, { loggedInUser, client }) => {
+      async (
+        _,
+        { file, caption }: UploadPhotoProps,
+        { loggedInUser, client }
+      ) => {
         let hashtagObj = [];
         if (caption) {
           // parse caption
-          const hashtags = caption.match(/#\w+/g);
-          hashtagObj = hashtags.map((hashtag) => ({
-            where: {
-              hashtag,
-            },
-            create: {
-              hashtag,
-            },
-          }));
+          hashtagObj = processHashtags(caption);
           // get or create hashtags
         }
         const photo = await client.photo.create({

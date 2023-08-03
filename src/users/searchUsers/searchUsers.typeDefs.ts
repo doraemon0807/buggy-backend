@@ -1,13 +1,13 @@
 const searchUsersTypeDefs = `#graphql
 
-    type searchUsersResult{
+    type SearchUsersResult{
         ok: Boolean!
         error: String
         users: [User]
     }
 
     type Query{
-        searchUsers(keyword: String!, lastId: Int): searchUsersResult!
+        searchUsers(keyword: String!, lastId: Int): SearchUsersResult!
     }
 
 `;
