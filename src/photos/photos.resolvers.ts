@@ -30,6 +30,17 @@ const photosResolver: Resolvers = {
       });
       return likes;
     },
+    comments: async ({ id }, _, { client }) => {
+      const comments = await client.comment.count({
+        where: {
+          photoId: id,
+        },
+      });
+      return comments;
+    },
+    isMine: async ({ userId }, _, { loggedInUser }) => {
+      return userId === loggedInUser?.id;
+    },
   },
   Hashtag: {
     photos: async ({ id }, { page }, { client }) => {

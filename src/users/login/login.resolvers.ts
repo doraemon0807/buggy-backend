@@ -34,7 +34,7 @@ const loginResolver: Resolvers = {
 
       // issue token and send it to the user
       const token = jwt.sign({ id: loginUser.id }, process.env.PRIVATE_KEY, {
-        expiresIn: "1d",
+        expiresIn: "7d",
       });
       return {
         ok: true,
