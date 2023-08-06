@@ -1,3 +1,3 @@
-# Buggy - Backend
+# Instaclone - Backend
 
-Bug Reporting Platform
+Instagram Clone
