@@ -9,7 +9,7 @@ const uploadPhotoTypeDefs = `#graphql
     }
 
     type Mutation {
-        uploadPhoto(file:String!, caption:String): UploadPhotoResult!
+        uploadPhoto(file:Upload!, caption:String): UploadPhotoResult!
     }
 
 `;

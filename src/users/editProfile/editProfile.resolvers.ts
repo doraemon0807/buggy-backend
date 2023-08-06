@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 // import { createWriteStream } from "fs";
-import { uploadPhoto } from "../../shared/shared.utils";
+import { uploadToS3 } from "../../shared/shared.utils";
 
 interface EditProfileProps {
   firstName: string;
@@ -31,10 +31,15 @@ const editProfileResolver = {
         }: EditProfileProps,
         { loggedInUser, client }
       ) => {
-        let avatarUrl = null;
+        let avatarUrl = loggedInUser.avatar || null;
         if (avatar) {
           // uploading files to AWS
-          avatarUrl = await uploadPhoto(avatar, loggedInUser.id);
+          avatarUrl = await uploadToS3(
+            avatar,
+            loggedInUser.id,
+            "avatar",
+            loggedInUser.avatar
+          );
 
           // // saving files locally
           // const { filename, createReadStream } = await avatar;
