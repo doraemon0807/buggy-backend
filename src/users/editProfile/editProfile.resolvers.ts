@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
-import { createWriteStream } from "fs";
+// import { createWriteStream } from "fs";
+import { uploadPhoto } from "../../shared/shared.utils";
 
 interface EditProfileProps {
   firstName: string;
@@ -32,14 +33,18 @@ const editProfileResolver = {
       ) => {
         let avatarUrl = null;
         if (avatar) {
-          const { filename, createReadStream } = await avatar;
-          const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
-          const readStream = createReadStream();
-          const writeStream = createWriteStream(
-            process.cwd() + "/uploads/" + newFilename
-          );
-          readStream.pipe(writeStream);
-          avatarUrl = `http://localhost:4000/static/${newFilename}`;
+          // uploading files to AWS
+          avatarUrl = await uploadPhoto(avatar, loggedInUser.id);
+
+          // // saving files locally
+          // const { filename, createReadStream } = await avatar;
+          // const newFilename = `${loggedInUser.id}-${Date.now()}-${filename}`;
+          // const readStream = createReadStream();
+          // const writeStream = createWriteStream(
+          //   process.cwd() + "/uploads/" + newFilename
+          // );
+          // readStream.pipe(writeStream);
+          // avatarUrl = `http://localhost:4000/static/${newFilename}`;
         }
 
         let hashPassword = null;
