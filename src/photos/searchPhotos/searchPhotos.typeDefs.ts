@@ -1,4 +1,5 @@
 const searchPhotosTypeDefs = `#graphql
+
     type SearchPhotosResult {
         ok: Boolean!
         error: String

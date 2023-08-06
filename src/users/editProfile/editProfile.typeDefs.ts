@@ -1,10 +1,6 @@
 const editProfileTypeDefs = `#graphql
+
   scalar Upload
-  
-  type EditProfileResult {
-    ok: Boolean!
-    error: String
-  }
 
   type Mutation {
     editProfile(
@@ -15,7 +11,7 @@ const editProfileTypeDefs = `#graphql
       password: String
       bio: String
       avatar: Upload
-    ): EditProfileResult!
+    ): MutationResponse!
   }
 `;
 

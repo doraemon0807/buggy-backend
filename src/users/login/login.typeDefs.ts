@@ -1,8 +1,9 @@
 const loginTypeDefs = `#graphql
+
   type LoginResult {
     ok: Boolean!
-    token: String
     error: String
+    token: String
   }
 
   type Mutation {

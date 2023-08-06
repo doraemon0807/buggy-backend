@@ -1,8 +1,4 @@
 const createAccountTypeDefs = `#graphql
-  type CreateAccountResult {
-    ok: Boolean!
-    error: String
-  }
 
   type Mutation {
     createAccount(
@@ -11,7 +7,7 @@ const createAccountTypeDefs = `#graphql
       username: String!
       email: String!
       password: String!
-    ): CreateAccountResult!
+    ): MutationResponse!
   }
 `;
 

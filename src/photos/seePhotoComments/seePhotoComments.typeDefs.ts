@@ -1,4 +1,5 @@
 const seePhotoCommentsTypeDefs = `#graphql
+
     type SeePhotoCommentsResult{
         ok: Boolean!
         error: String

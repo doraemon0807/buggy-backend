@@ -1,4 +1,5 @@
 const seePhotoLikesTypeDefs = `#graphql
+
     type SeePhotoLikesResult{
         ok: Boolean!
         error: String

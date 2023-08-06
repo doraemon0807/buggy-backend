@@ -2,8 +2,8 @@ const seeProfileTypeDefs = `#graphql
 
   type SeeProfileResult {
     ok: Boolean!
-    profile: User
     error: String
+    profile: User
   }
 
   type Query {
