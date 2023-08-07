@@ -6,6 +6,8 @@ const messages = `#graphql
         updatedAt: String!
         user: User!
         room: Room!
+        read: Boolean!
+        unreaders: [User]
     }
 
     type Room{
@@ -14,6 +16,7 @@ const messages = `#graphql
         updatedAt: String!
         users: [User]
         messages: [Message]
+        unreadTotal: Int!
     }
 `;
 

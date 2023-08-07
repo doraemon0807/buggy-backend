@@ -1,10 +1,12 @@
+import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
+import { processParticipants } from "../messages.utils";
 
 interface SendMessageProps {
   payload: string;
   roomId?: number;
-  userId?: number;
+  userIds?: number[];
 }
 
 const sendMessageResolver: Resolvers = {
@@ -12,43 +14,57 @@ const sendMessageResolver: Resolvers = {
     sendMessage: protectedResolver(
       async (
         _,
-        { payload, roomId, userId }: SendMessageProps,
+        { payload, roomId, userIds }: SendMessageProps,
         { loggedInUser, client }
       ) => {
         let room = null;
 
         // If room with the user doesn't exist already => create a new room
-        if (userId && !roomId) {
-          const user = await client.user.findUnique({
-            where: {
-              id: userId,
-            },
-            select: {
-              id: true,
-            },
+        if (!roomId) {
+          userIds.map(async (userId) => {
+            const foundUser = await client.user.findUnique({
+              where: {
+                id: userId,
+              },
+              select: {
+                id: true,
+              },
+            });
+            if (!foundUser) {
+              return {
+                ok: false,
+                error: "User doesn't exist.",
+              };
+            }
           });
-          if (!user) {
-            return {
-              ok: false,
-              error: "This user doesn't exist.",
-            };
-          }
-          room = await client.chatRoom.create({
-            data: {
+          const allParticipantsIds = [...userIds];
+          allParticipantsIds.push(loggedInUser.id);
+
+          const existingRoom = await client.chatRoom.findFirst({
+            where: {
               users: {
-                connect: [
-                  {
-                    id: userId,
+                every: {
+                  id: {
+                    in: allParticipantsIds,
                   },
-                  {
-                    id: loggedInUser.id,
-                  },
-                ],
+                },
               },
             },
           });
+
+          if (!existingRoom) {
+            room = await client.chatRoom.create({
+              data: {
+                users: {
+                  connect: [...processParticipants(allParticipantsIds)],
+                },
+              },
+            });
+          } else {
+            room = existingRoom;
+          }
           // If room with the user already exists => load the existing room
-        } else if (roomId && !userId) {
+        } else if (roomId) {
           room = await client.chatRoom.findUnique({
             where: {
               id: roomId,
@@ -57,6 +73,7 @@ const sendMessageResolver: Resolvers = {
               id: true,
             },
           });
+
           if (!room) {
             return {
               ok: false,
@@ -74,7 +91,7 @@ const sendMessageResolver: Resolvers = {
         await client.chatMessage.create({
           data: {
             payload,
-            room: {
+            chatRoom: {
               connect: {
                 id: room.id,
               },
@@ -83,6 +100,9 @@ const sendMessageResolver: Resolvers = {
               connect: {
                 id: loggedInUser.id,
               },
+            },
+            unreaders: {
+              connect: processParticipants(userIds),
             },
           },
         });

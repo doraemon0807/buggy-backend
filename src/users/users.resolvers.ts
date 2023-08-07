@@ -1,12 +1,9 @@
+import { User } from "@prisma/client";
 import { Resolvers } from "../types";
-
-interface UsersResolverProps {
-  id: number;
-}
 
 const usersResolver: Resolvers = {
   User: {
-    totalFollowing: async ({ id }: UsersResolverProps, _, { client }) => {
+    totalFollowing: async ({ id }: User, _, { client }) => {
       const followingCount = await client.user.count({
         where: {
           followers: {
@@ -18,7 +15,7 @@ const usersResolver: Resolvers = {
       });
       return followingCount;
     },
-    totalFollowers: async ({ id }: UsersResolverProps, _, { client }) => {
+    totalFollowers: async ({ id }: User, _, { client }) => {
       const followerCount = await client.user.count({
         where: {
           following: {
@@ -30,14 +27,10 @@ const usersResolver: Resolvers = {
       });
       return followerCount;
     },
-    isMe: async ({ id }: UsersResolverProps, _, { loggedInUser }) => {
+    isMe: async ({ id }: User, _, { loggedInUser }) => {
       return id === loggedInUser?.id;
     },
-    isFollowing: async (
-      { id }: UsersResolverProps,
-      _,
-      { loggedInUser, client }
-    ) => {
+    isFollowing: async ({ id }: User, _, { loggedInUser, client }) => {
       if (!loggedInUser) {
         return false;
       }
@@ -55,7 +48,7 @@ const usersResolver: Resolvers = {
 
       return Boolean(isFollowing);
     },
-    photos: async ({ id }: UsersResolverProps, _, { client }) => {
+    photos: async ({ id }: User, _, { client }) => {
       const photos = await client.user
         .findUnique({
           where: {

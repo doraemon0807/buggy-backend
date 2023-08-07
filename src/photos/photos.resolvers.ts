@@ -1,8 +1,9 @@
+import { Photo } from "@prisma/client";
 import { Resolvers } from "../types";
 
 const photosResolver: Resolvers = {
   Photo: {
-    user: async ({ userId }, _, { client }) => {
+    user: async ({ userId }: Photo, _, { client }) => {
       const user = await client.user.findFirst({
         where: {
           id: userId,
@@ -10,7 +11,7 @@ const photosResolver: Resolvers = {
       });
       return user;
     },
-    hashtags: async ({ id }, _, { client }) => {
+    hashtags: async ({ id }: Photo, _, { client }) => {
       const hashtags = await client.hashtag.findMany({
         where: {
           photos: {
@@ -22,7 +23,7 @@ const photosResolver: Resolvers = {
       });
       return hashtags;
     },
-    likes: async ({ id }, _, { client }) => {
+    likes: async ({ id }: Photo, _, { client }) => {
       const likes = await client.like.count({
         where: {
           photoId: id,
@@ -30,7 +31,7 @@ const photosResolver: Resolvers = {
       });
       return likes;
     },
-    comments: async ({ id }, _, { client }) => {
+    comments: async ({ id }: Photo, _, { client }) => {
       const comments = await client.comment.count({
         where: {
           photoId: id,
@@ -38,22 +39,28 @@ const photosResolver: Resolvers = {
       });
       return comments;
     },
-    isMine: async ({ userId }, _, { loggedInUser }) => {
+    isMine: async ({ userId }: Photo, _, { loggedInUser }) => {
       return userId === loggedInUser?.id;
     },
   },
   Hashtag: {
-    photos: async ({ id }, { page }, { client }) => {
-      const photos = await client.hashtag
-        .findUnique({
-          where: {
-            id,
-          },
-        })
-        .photos();
+    photos: async ({ id }: Photo, { page }, { client }) => {
+      // const photos = await client.hashtag
+      //   .findUnique({
+      //     where: {
+      //       id,
+      //     },
+      //   })
+      //   .photos();
+
+      const photos = await client.photo.findMany({
+        where: {
+          hashtagId: id,
+        },
+      });
       return photos;
     },
-    totalPhotos: async ({ id }, _, { client }) => {
+    totalPhotos: async ({ id }: Photo, _, { client }) => {
       const totalPhotos = await client.photo.count({
         where: {
           hashtags: {
