@@ -9,7 +9,7 @@ const seeRoomResolver: Resolvers = {
   Query: {
     seeRoom: protectedResolver(
       async (_, { id }: SeeRoomProps, { loggedInUser, client }) => {
-        const rooms = await client.chatRoom.findFirst({
+        const room = await client.chatRoom.findFirst({
           where: {
             id,
             users: {
@@ -22,7 +22,7 @@ const seeRoomResolver: Resolvers = {
 
         return {
           ok: true,
-          rooms,
+          room,
         };
       }
     ),

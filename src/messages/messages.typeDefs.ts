@@ -4,10 +4,12 @@ const messages = `#graphql
         id: Int!
         createdAt: String!
         updatedAt: String!
+        payload: String!
         user: User!
         room: Room!
         read: Boolean!
         unreaders: [User]
+        isMine: Boolean!
     }
 
     type Room{

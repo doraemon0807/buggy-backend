@@ -3,7 +3,7 @@ const seeRoomTypeDefs = `#graphql
     type SeeRoomResult{
         ok: Boolean!
         error: String
-        rooms: [Room]
+        room: Room
     }
 
     type Query{

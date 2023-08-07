@@ -1,4 +1,4 @@
-import { ChatRoom } from "@prisma/client";
+import { ChatMessage, ChatRoom } from "@prisma/client";
 import { Resolvers } from "../types";
 
 const messagesResolver: Resolvers = {
@@ -44,6 +44,23 @@ const messagesResolver: Resolvers = {
         },
       });
       return unreadTotal;
+    },
+  },
+
+  Message: {
+    user: async ({ id }: ChatMessage, _, { client }) => {
+      const user = client.chatMessage
+        .findUnique({
+          where: {
+            id,
+          },
+        })
+        .user();
+      return user;
+    },
+
+    isMine: async ({ userId }: ChatMessage, _, { loggedInUser }) => {
+      return userId === loggedInUser?.id;
     },
   },
 };
