@@ -1,7 +1,7 @@
 import { PrismaClient, User } from "@prisma/client";
 import { GraphQLResolveInfo } from "graphql";
 
-type ContextType = {
+export type ContextType = {
   loggedInUser?: User;
   client?: PrismaClient;
 };

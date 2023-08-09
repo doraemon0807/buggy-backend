@@ -1,4 +1,4 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import client from "../client";
 import { Resolver } from "../types";
 
@@ -9,20 +9,18 @@ export const getUser = async (token: string) => {
       return null;
     }
 
-    const verifiedToken: any = jwt.verify(token, process.env.PRIVATE_KEY);
+    const { id } = jwt.verify(token, process.env.PRIVATE_KEY) as JwtPayload;
 
-    if ("id" in verifiedToken) {
-      const loggedInUser = await client.user.findUnique({
-        where: {
-          id: verifiedToken.id,
-        },
-      });
+    const loggedInUser = await client.user.findUnique({
+      where: {
+        id,
+      },
+    });
 
-      if (loggedInUser) {
-        return loggedInUser;
-      } else {
-        return null;
-      }
+    if (loggedInUser) {
+      return loggedInUser;
+    } else {
+      return null;
     }
   } catch {
     return null;

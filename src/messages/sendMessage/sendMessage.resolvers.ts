@@ -2,6 +2,8 @@ import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 import { processParticipants } from "../messages.utils";
+import pubsub from "../../pubsub";
+import { NEW_MESSAGE } from "../../constants";
 
 interface SendMessageProps {
   payload: string;
@@ -88,7 +90,7 @@ const sendMessageResolver: Resolvers = {
         }
 
         // Create new message and connect to room and user
-        await client.chatMessage.create({
+        const newMessage = await client.chatMessage.create({
           data: {
             payload,
             chatRoom: {
@@ -104,6 +106,12 @@ const sendMessageResolver: Resolvers = {
             unreaders: {
               connect: processParticipants(userIds),
             },
+          },
+        });
+
+        pubsub.publish(NEW_MESSAGE, {
+          roomUpdate: {
+            ...newMessage,
           },
         });
 
