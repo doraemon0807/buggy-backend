@@ -5,6 +5,7 @@ const sharedTypeDefs = `#graphql
     type MutationResponse{
         ok: Boolean!
         error: String
+        id: Int
     }
 `;
 
