@@ -9,7 +9,9 @@ const photosTypeDefs = `#graphql
         hashtags: [Hashtag]
         likes: Int!
         isMine: Boolean!
-        comments: Int!
+        isLiked: Boolean!
+        commentCount: Int!
+        comments: [Comment]
     }
 
     type Hashtag {

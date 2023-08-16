@@ -31,16 +31,45 @@ const photosResolver: Resolvers = {
       });
       return likes;
     },
-    comments: async ({ id }: Photo, _, { client }) => {
-      const comments = await client.comment.count({
+    commentCount: async ({ id }: Photo, _, { client }) => {
+      const commentCount = await client.comment.count({
         where: {
           photoId: id,
+        },
+      });
+      return commentCount;
+    },
+    comments: async ({ id }: Photo, _, { client }) => {
+      const comments = await client.comment.findMany({
+        where: {
+          photoId: id,
+        },
+        include: {
+          user: true,
         },
       });
       return comments;
     },
     isMine: async ({ userId }: Photo, _, { loggedInUser }) => {
       return userId === loggedInUser?.id;
+    },
+    isLiked: async ({ id }: Photo, _, { loggedInUser, client }) => {
+      const like = await client.like.findUnique({
+        where: {
+          photoId_userId: {
+            photoId: id,
+            userId: loggedInUser.id,
+          },
+        },
+        select: {
+          id: true,
+        },
+      });
+
+      if (like) {
+        return true;
+      }
+      return false;
     },
   },
   Hashtag: {
