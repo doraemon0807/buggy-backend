@@ -30,6 +30,13 @@ const photosTypeDefs = `#graphql
         photo: Photo!
     }
 
+    type Saved {
+        id: Int!
+        createdAt: String!
+        updatedAt: String!
+        photo: Photo!
+    }
+
 `;
 
 export default photosTypeDefs;

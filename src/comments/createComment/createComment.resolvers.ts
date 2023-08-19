@@ -1,3 +1,4 @@
+import { processHashtags } from "../../photos/photos.utils";
 import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
@@ -28,6 +29,8 @@ const createCommentResolver: Resolvers = {
             error: "Photo not found.",
           };
         }
+
+        //add new comment to the photo
         const newComment = await client.comment.create({
           data: {
             payload,
@@ -43,6 +46,7 @@ const createCommentResolver: Resolvers = {
             },
           },
         });
+
         return {
           ok: true,
           id: newComment.id,

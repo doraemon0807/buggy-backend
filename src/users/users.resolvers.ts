@@ -3,6 +3,9 @@ import { Resolvers } from "../types";
 
 const usersResolver: Resolvers = {
   User: {
+    fullName: async ({ firstName, lastName }: User) => {
+      return `${firstName} ${lastName}`;
+    },
     totalFollowing: async ({ id }: User, _, { client }) => {
       const followingCount = await client.user.count({
         where: {
@@ -45,18 +48,43 @@ const usersResolver: Resolvers = {
           },
         },
       });
-
       return Boolean(isFollowing);
     },
-    photos: async ({ id }: User, _, { client }) => {
-      const photos = await client.user
-        .findUnique({
-          where: {
-            id,
-          },
-        })
-        .photos();
+    photos: async ({ id }: User, { page }, { client }) => {
+      const photos = await client.photo.findMany({
+        where: {
+          userId: id,
+        },
+      });
       return photos;
+    },
+    photoCount: async ({ id }: User, _, { client }) => {
+      const photoCount = await client.photo.count({
+        where: {
+          userId: id,
+        },
+      });
+      return photoCount;
+    },
+    savedPhotos: async ({ id }: User, { page }, { client }) => {
+      const savedPhotos = await client.saved.findMany({
+        where: {
+          userId: id,
+        },
+      });
+      return savedPhotos;
+    },
+    taggedPhotos: async ({ id }: User, { page }, { client }) => {
+      const taggedPhotos = await client.photo.findMany({
+        where: {
+          tagged: {
+            some: {
+              id,
+            },
+          },
+        },
+      });
+      return taggedPhotos;
     },
   },
 };

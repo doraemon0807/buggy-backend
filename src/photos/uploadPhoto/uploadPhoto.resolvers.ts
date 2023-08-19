@@ -1,6 +1,6 @@
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import { protectedResolver } from "../../users/users.utils";
-import { processHashtags } from "../photos.utils";
+import { processHashtags, processTags } from "../photos.utils";
 import { uploadToS3 } from "../../shared/shared.utils";
 
 interface UploadPhotoProps {
@@ -18,9 +18,11 @@ const uploadPhotoResolver = {
         { loggedInUser, client }
       ) => {
         let hashtagObj = [];
+        let tagObj = [];
         if (caption) {
           // get or create hashtags
           hashtagObj = processHashtags(caption);
+          tagObj = await processTags(caption);
         }
 
         const fileUrl = await uploadToS3(file, loggedInUser.id, "uploads");
@@ -39,10 +41,16 @@ const uploadPhotoResolver = {
                 connectOrCreate: hashtagObj,
               },
             }),
+            ...(tagObj.length > 0 && {
+              tagged: {
+                connect: tagObj,
+              },
+            }),
           },
           include: {
             user: true,
             hashtags: true,
+            tagged: true,
           },
         });
         // save photo with parsed hashtags

@@ -11,11 +11,15 @@ const usersTypeDefs = `#graphql
     avatar: String
     following: [User]
     followers: [User]
+    fullName: String!
     totalFollowing: Int!
     totalFollowers: Int!
     isFollowing: Boolean!
     isMe: Boolean!
     photos: [Photo]
+    photoCount: Int!
+    savedPhotos: [Photo]
+    taggedPhotos: [Photo]
   }
 `;
 
