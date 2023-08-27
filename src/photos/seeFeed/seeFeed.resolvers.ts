@@ -2,14 +2,14 @@ import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 
 interface SeeFeedProps {
-  lastId: number;
+  offset: number;
 }
 
 const seeFeedResolver: Resolvers = {
   Query: {
     seeFeed: protectedResolver(
-      async (_, { lastId }: SeeFeedProps, { loggedInUser, client }) => {
-        const offset = 5;
+      async (_, { offset }: SeeFeedProps, { loggedInUser, client }) => {
+        // const offset = 1;
 
         // find photos of people who have me in their followers list OR my photos
         const photos = await client.photo.findMany({
@@ -30,14 +30,11 @@ const seeFeedResolver: Resolvers = {
           orderBy: {
             createdAt: "desc",
           },
-          take: offset,
-          skip: lastId ? 1 : 0,
-          ...(lastId && { cursor: { id: lastId } }),
+          take: 2,
+          skip: offset,
+          // ...(lastId && { cursor: { id: lastId } }),
         });
-        return {
-          ok: true,
-          photos,
-        };
+        return photos;
       }
     ),
   },
