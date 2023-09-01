@@ -2,18 +2,16 @@ import { Resolvers } from "../../types";
 
 interface SeePhotoLikesProps {
   id: number; //photo Id
-  lastId: number;
+  offset: number;
 }
 
 const SeePhotoLikesResolver: Resolvers = {
   Query: {
     seePhotoLikes: async (
       _,
-      { id, lastId }: SeePhotoLikesProps,
+      { id, offset }: SeePhotoLikesProps,
       { client }
     ) => {
-      const offset = 5;
-
       const likes = await client.like.findMany({
         where: {
           photoId: id,
@@ -21,15 +19,11 @@ const SeePhotoLikesResolver: Resolvers = {
         select: {
           user: true,
         },
-        take: offset,
-        skip: lastId ? 1 : 0,
-        ...(lastId && { cursor: { id: lastId } }),
+        take: 2,
+        skip: offset,
       });
 
-      return {
-        ok: true,
-        users: likes.map((like) => like.user),
-      };
+      return likes.map((like) => like.user);
     },
   },
 };

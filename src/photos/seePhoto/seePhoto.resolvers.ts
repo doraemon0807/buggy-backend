@@ -12,10 +12,7 @@ const seePhotoResolver: Resolvers = {
           id,
         },
       });
-      return {
-        ok: true,
-        photo,
-      };
+      return photo;
     },
   },
 };

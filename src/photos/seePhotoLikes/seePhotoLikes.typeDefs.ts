@@ -1,13 +1,7 @@
 const seePhotoLikesTypeDefs = `#graphql
 
-    type SeePhotoLikesResult{
-        ok: Boolean!
-        error: String
-        users: [User]
-    }
-
     type Query{
-        seePhotoLikes(id:Int!, lastId: Int):SeePhotoLikesResult!
+        seePhotoLikes(id:Int!, offset:Int):[User]!
     }
 
 `;

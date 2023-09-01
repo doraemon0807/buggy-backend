@@ -2,14 +2,14 @@ import { Resolvers } from "../../types";
 
 interface SearchPhotosProps {
   keyword: string;
-  lastId: number;
+  offset: number;
 }
 
 const searchPhotosResolver: Resolvers = {
   Query: {
     searchPhotos: async (
       _,
-      { keyword, lastId }: SearchPhotosProps,
+      { keyword, offset }: SearchPhotosProps,
       { client }
     ) => {
       if (keyword.length < 3) {
@@ -19,7 +19,6 @@ const searchPhotosResolver: Resolvers = {
         };
       }
 
-      const offset = 5;
       const photos = await client.photo.findMany({
         where: {
           caption: {
@@ -27,14 +26,11 @@ const searchPhotosResolver: Resolvers = {
             contains: keyword,
           },
         },
-        take: offset,
-        skip: lastId ? 1 : 0,
-        ...(lastId && { cursor: { id: lastId } }),
+        take: 18,
+        skip: offset,
+        // ...(lastId && { cursor: { id: lastId } }),
       });
-      return {
-        ok: true,
-        photos,
-      };
+      return photos;
     },
   },
 };
