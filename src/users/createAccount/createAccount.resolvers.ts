@@ -2,13 +2,9 @@ import bcrypt from "bcrypt";
 import { Resolvers } from "../../types";
 import { User } from "@prisma/client";
 
-interface CreateAccountProps {
-  username: string;
-}
-
 const createAccountresolver: Resolvers = {
   Query: {
-    seeProfile: async (_, { username }: CreateAccountProps, { client }) => {
+    seeProfile: async (_, { username }: User, { client }) => {
       const foundUser = await client.user.findUnique({
         where: {
           username,

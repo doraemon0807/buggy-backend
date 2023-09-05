@@ -1,14 +1,11 @@
+import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 import { protectedResolver } from "../users.utils";
-
-interface UnfollowUserProps {
-  username: string;
-}
 
 const unfollowUserResolver: Resolvers = {
   Mutation: {
     unfollowUser: protectedResolver(
-      async (_, { username }: UnfollowUserProps, { loggedInUser, client }) => {
+      async (_, { username }: User, { loggedInUser, client }) => {
         const foundUser = await client.user.findUnique({
           where: {
             username,

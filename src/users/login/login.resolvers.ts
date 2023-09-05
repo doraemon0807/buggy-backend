@@ -1,15 +1,11 @@
+import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { Resolvers } from "../../types";
 
-interface LoginProps {
-  username: string;
-  password: string;
-}
-
 const loginResolver: Resolvers = {
   Mutation: {
-    login: async (_, { username, password }: LoginProps, { client }) => {
+    login: async (_, { username, password }: User, { client }) => {
       // find user with args.username
       const loginUser = await client.user.findUnique({
         where: {

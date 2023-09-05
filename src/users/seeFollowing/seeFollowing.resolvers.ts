@@ -1,7 +1,7 @@
+import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 
-interface SeeFollowingProps {
-  username: string;
+interface SeeFollowingProps extends User {
   lastId: number;
 }
 

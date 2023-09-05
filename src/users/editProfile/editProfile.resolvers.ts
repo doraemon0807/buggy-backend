@@ -1,18 +1,9 @@
+import { User } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { protectedResolver } from "../users.utils";
 import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 // import { createWriteStream } from "fs";
 import { uploadToS3 } from "../../shared/shared.utils";
-
-interface EditProfileProps {
-  firstName: string;
-  lastName: string;
-  username: string;
-  email: string;
-  password: string;
-  bio: string;
-  avatar: any;
-}
 
 const editProfileResolver = {
   Upload: GraphQLUpload,
@@ -28,7 +19,7 @@ const editProfileResolver = {
           password: newPassword,
           bio,
           avatar,
-        }: EditProfileProps,
+        }: User,
         { loggedInUser, client }
       ) => {
         let avatarUrl = loggedInUser.avatar || null;

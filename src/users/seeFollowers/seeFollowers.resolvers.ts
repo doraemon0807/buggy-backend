@@ -1,7 +1,7 @@
+import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 
-interface SeeFollowersProps {
-  username: string;
+interface SeeFollowersProps extends User {
   page: number;
 }
 

@@ -27,6 +27,7 @@ const uploadPhotoResolver = {
 
         const fileUrl = await uploadToS3(file, loggedInUser.id, "uploads");
 
+        // save photo with parsed hashtags
         const photo = await client.photo.create({
           data: {
             file: fileUrl,
@@ -36,6 +37,7 @@ const uploadPhotoResolver = {
                 id: loggedInUser.id,
               },
             },
+            // add photo to the hashtags
             ...(hashtagObj.length > 0 && {
               hashtags: {
                 connectOrCreate: hashtagObj,
@@ -53,8 +55,7 @@ const uploadPhotoResolver = {
             tagged: true,
           },
         });
-        // save photo with parsed hashtags
-        // add photo to the hashtags
+
         return {
           ok: true,
           photo,
