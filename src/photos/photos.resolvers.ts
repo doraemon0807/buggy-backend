@@ -84,7 +84,11 @@ const photosResolver: Resolvers = {
 
       const photos = await client.photo.findMany({
         where: {
-          hashtagId: id,
+          hashtags: {
+            some: {
+              id,
+            },
+          },
         },
       });
       return photos;
