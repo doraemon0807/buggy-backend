@@ -24,10 +24,7 @@ const seeRoomsResolvers: Resolvers = {
           ...(lastId && { cursor: { id: lastId } }),
         });
 
-        return {
-          ok: true,
-          rooms,
-        };
+        return rooms;
       }
     ),
   },

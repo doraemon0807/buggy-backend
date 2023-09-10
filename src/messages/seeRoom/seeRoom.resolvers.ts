@@ -20,10 +20,7 @@ const seeRoomResolver: Resolvers = {
           },
         });
 
-        return {
-          ok: true,
-          room,
-        };
+        return room;
       }
     ),
   },

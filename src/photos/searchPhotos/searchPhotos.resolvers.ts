@@ -13,10 +13,7 @@ const searchPhotosResolver: Resolvers = {
       { client }
     ) => {
       if (keyword.length < 3) {
-        return {
-          ok: false,
-          error: "Keyword must be longer than 2 letters.",
-        };
+        return [];
       }
 
       const photos = await client.photo.findMany({
