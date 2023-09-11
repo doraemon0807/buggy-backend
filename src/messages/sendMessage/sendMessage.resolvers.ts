@@ -1,4 +1,3 @@
-import { User } from "@prisma/client";
 import { Resolvers } from "../../types";
 import { protectedResolver } from "../../users/users.utils";
 import { processParticipants } from "../messages.utils";
@@ -117,6 +116,7 @@ const sendMessageResolver: Resolvers = {
 
         return {
           ok: true,
+          id: newMessage.id,
         };
       }
     ),

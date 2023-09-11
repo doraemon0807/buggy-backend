@@ -47,6 +47,7 @@ const readMessageResolver: Resolvers = {
             },
           },
           select: {
+            id: true,
             chatRoomId: true,
             unreaders: {
               select: {
@@ -70,6 +71,7 @@ const readMessageResolver: Resolvers = {
 
         return {
           ok: true,
+          id: updatedMessage.id,
         };
       }
     ),

@@ -18,6 +18,9 @@ const messagesResolver: Resolvers = {
         where: {
           chatRoomId: id,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       });
       return messages;
     },
