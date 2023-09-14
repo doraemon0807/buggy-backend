@@ -38,7 +38,7 @@ const roomUpdateResolver = {
           //protection after user starts to listen
           async ({ roomUpdate }, { id }, { loggedInUser }) => {
             // if updatedroom ID is identical to the room ID the user is listening
-            if (roomUpdate.chatRoomId === id) {
+            if (roomUpdate.roomId === id) {
               // if user is inside the room
               const room = await context.client.chatRoom.findFirst({
                 where: {
