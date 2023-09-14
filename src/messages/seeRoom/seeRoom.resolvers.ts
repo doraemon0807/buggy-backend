@@ -19,7 +19,6 @@ const seeRoomResolver: Resolvers = {
             },
           },
         });
-
         return room;
       }
     ),

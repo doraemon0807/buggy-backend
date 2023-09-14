@@ -13,7 +13,7 @@ const readMessageResolver: Resolvers = {
               // not my message
               not: loggedInUser.id,
             },
-            chatRoom: {
+            room: {
               //from a chatRoom where I am one of the participants
               users: {
                 some: {
@@ -48,7 +48,7 @@ const readMessageResolver: Resolvers = {
           },
           select: {
             id: true,
-            chatRoomId: true,
+            roomId: true,
             unreaders: {
               select: {
                 id: true,
@@ -64,7 +64,7 @@ const readMessageResolver: Resolvers = {
               id,
             },
             data: {
-              read: true,
+              readByAll: true,
             },
           });
         }

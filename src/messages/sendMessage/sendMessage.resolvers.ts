@@ -92,7 +92,7 @@ const sendMessageResolver: Resolvers = {
         const newMessage = await client.chatMessage.create({
           data: {
             payload,
-            chatRoom: {
+            room: {
               connect: {
                 id: room.id,
               },

@@ -20,6 +20,7 @@ const usersTypeDefs = `#graphql
     photoCount: Int!
     savedPhotos: [Photo]
     taggedPhotos: [Photo]
+    unreadMessage: [Message]
   }
 `;
 

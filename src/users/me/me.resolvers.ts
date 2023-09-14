@@ -8,6 +8,10 @@ const meResolver: Resolvers = {
         where: {
           id: loggedInUser.id,
         },
+        include: {
+          followers: true,
+          following: true,
+        },
       });
 
       if (!user) {

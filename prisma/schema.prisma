@@ -28,7 +28,7 @@ model User {
   likes         Like[]
   comments      Comment[]
   rooms         ChatRoom[]
-  chatMessages  ChatMessage[]
+  messages      ChatMessage[]
   unreadMessage ChatMessage[] @relation("MessageReaders")
   saved         Saved[]
   tagged        Photo[]       @relation("Tagged")
@@ -98,22 +98,22 @@ model Comment {
 }
 
 model ChatRoom {
-  id           Int           @id @default(autoincrement())
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
-  users        User[]
-  chatMessages ChatMessage[]
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  users     User[]
+  messages  ChatMessage[]
 }
 
 model ChatMessage {
-  id         Int      @id @default(autoincrement())
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  payload    String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId     Int
-  chatRoom   ChatRoom @relation(fields: [chatRoomId], references: [id], onDelete: Cascade)
-  chatRoomId Int
-  read       Boolean  @default(false)
-  unreaders  User[]   @relation("MessageReaders")
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  payload   String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    Int
+  room      ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  roomId    Int
+  readByAll Boolean  @default(false)
+  unreaders User[]   @relation("MessageReaders")
 }

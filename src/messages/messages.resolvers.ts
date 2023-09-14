@@ -16,10 +16,13 @@ const messagesResolver: Resolvers = {
     messages: async ({ id }: ChatRoom, _, { client }) => {
       const messages = await client.chatMessage.findMany({
         where: {
-          chatRoomId: id,
+          roomId: id,
         },
         orderBy: {
           createdAt: "desc",
+        },
+        include: {
+          unreaders: true,
         },
       });
       return messages;
@@ -28,10 +31,10 @@ const messagesResolver: Resolvers = {
       if (!loggedInUser) {
         return 0;
       }
-      const unreadTotal = client.chatMessage.count({
+      const unreadTotal = await client.chatMessage.count({
         where: {
           // from a room with specific id
-          chatRoomId: id,
+          roomId: id,
           // not my message
           user: {
             id: {
@@ -52,7 +55,7 @@ const messagesResolver: Resolvers = {
 
   Message: {
     user: async ({ id }: ChatMessage, _, { client }) => {
-      const user = client.chatMessage
+      const user = await client.chatMessage
         .findUnique({
           where: {
             id,
@@ -60,6 +63,24 @@ const messagesResolver: Resolvers = {
         })
         .user();
       return user;
+    },
+
+    readByMe: async ({ id }: ChatMessage, _, { client, loggedInUser }) => {
+      return !Boolean(
+        await client.chatMessage.findFirst({
+          where: {
+            id,
+            unreaders: {
+              some: {
+                id: loggedInUser.id,
+              },
+            },
+          },
+          select: {
+            id: true,
+          },
+        })
+      );
     },
 
     isMine: async ({ userId }: ChatMessage, _, { loggedInUser }) => {

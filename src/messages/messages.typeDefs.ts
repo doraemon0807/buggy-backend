@@ -7,8 +7,9 @@ const messages = `#graphql
         payload: String!
         user: User!
         room: Room!
-        read: Boolean!
-        unreaders: [User]
+        readByAll: Boolean!
+        readByMe: Boolean!
+        unreaders: [User]!
         isMine: Boolean!
     }
 
