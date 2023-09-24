@@ -8,7 +8,8 @@ const editProfileTypeDefs = `#graphql
       lastName: String
       username: String
       email: String
-      password: String
+      oldPassword: String
+      newPassword: String
       bio: String
       avatar: Upload
     ): MutationResponse!

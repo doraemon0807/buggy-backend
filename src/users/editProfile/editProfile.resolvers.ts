@@ -5,6 +5,11 @@ import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 // import { createWriteStream } from "fs";
 import { uploadToS3 } from "../../shared/shared.utils";
 
+interface UserWithPasswords extends User {
+  oldPassword: string;
+  newPassword: string;
+}
+
 const editProfileResolver = {
   Upload: GraphQLUpload,
   Mutation: {
@@ -16,10 +21,11 @@ const editProfileResolver = {
           lastName,
           username,
           email,
-          password: newPassword,
           bio,
           avatar,
-        }: User,
+          oldPassword,
+          newPassword,
+        }: UserWithPasswords,
         { loggedInUser, client }
       ) => {
         let avatarUrl = loggedInUser.avatar || null;
@@ -44,7 +50,18 @@ const editProfileResolver = {
         }
 
         let hashPassword = null;
-        if (newPassword) {
+        if (oldPassword || newPassword) {
+          // check password with args.password
+          const passwordCheck = await bcrypt.compare(
+            oldPassword,
+            loggedInUser.password
+          );
+          if (!passwordCheck) {
+            return {
+              ok: false,
+              error: "Your current password is incorrect.",
+            };
+          }
           hashPassword = await bcrypt.hash(newPassword, 10);
         }
 
