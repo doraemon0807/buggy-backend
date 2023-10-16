@@ -6,8 +6,8 @@ import GraphQLUpload from "graphql-upload/GraphQLUpload.mjs";
 import { uploadToS3 } from "../../shared/shared.utils";
 
 interface UserWithPasswords extends User {
-  oldPassword: string;
-  newPassword: string;
+  oldPassword?: string;
+  newPassword?: string;
 }
 
 const editProfileResolver = {
@@ -28,7 +28,21 @@ const editProfileResolver = {
         }: UserWithPasswords,
         { loggedInUser, client }
       ) => {
+        const foundUser = await client.user.findUnique({
+          where: {
+            id: loggedInUser.id,
+          },
+        });
+
+        if (!foundUser) {
+          return {
+            ok: false,
+            error: "User does not exist.",
+          };
+        }
+
         let avatarUrl = loggedInUser.avatar || null;
+
         if (avatar) {
           // uploading files to AWS
           avatarUrl = await uploadToS3(
@@ -49,20 +63,22 @@ const editProfileResolver = {
           // avatarUrl = `http://localhost:4000/static/${newFilename}`;
         }
 
-        let hashPassword = null;
-        if (oldPassword || newPassword) {
-          // check password with args.password
+        let newHashPassword = null;
+
+        if (oldPassword && newPassword) {
+          newHashPassword = await bcrypt.hash(newPassword, 10);
+
           const passwordCheck = await bcrypt.compare(
             oldPassword,
-            loggedInUser.password
+            foundUser.password
           );
+
           if (!passwordCheck) {
             return {
               ok: false,
-              error: "Your current password is incorrect.",
+              error: "Incorrect password.",
             };
           }
-          hashPassword = await bcrypt.hash(newPassword, 10);
         }
 
         const updatedUser = await client.user.update({
@@ -76,7 +92,7 @@ const editProfileResolver = {
             email,
             bio,
             ...(avatarUrl && { avatar: avatarUrl }),
-            ...(hashPassword && { password: hashPassword }),
+            ...(newHashPassword && { password: newHashPassword }),
           },
         });
 
