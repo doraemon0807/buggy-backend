@@ -9,7 +9,7 @@ const messages = `#graphql
         room: Room!
         readByAll: Boolean!
         readByMe: Boolean!
-        unreaders: [User]!
+        unreaders: [User]
         isMine: Boolean!
     }
 
